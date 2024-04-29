@@ -1,5 +1,19 @@
 # medsoft_hady_task1
 
+
+## VTK Render Window in same QT APp
+New Files 
+> `refactor_v1_QH.py` **Run app from Here**
+> 
+>`Rendering.py`
+
+- render all the scenes inside a H Box
+- Clear actors before Re-Render
+
+![App-GIF](refactor1-app.gif)
+
+
+
 ![App](Screenshot_of_The_App.jpg)
 
 - Upload Data NNRD (Perform Volume Rendering)
