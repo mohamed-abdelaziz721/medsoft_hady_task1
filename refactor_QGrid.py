@@ -25,7 +25,7 @@ class AppLogic:
         return None       
 
     def setup_ui_connections(self):
-        self.ui.upload_ct_button.clicked.connect(self.open_file_dialog)
+        self.ui.upload_ct_button.clicked.connect(self.open_ct_file)
         self.ui.export_stl.clicked.connect(self.open_stl_segment)
         self.ui.segments_comboBox.currentIndexChanged.connect(self.segment_selection_changed)
         self.ui.cyl_cube.clicked.connect(self.add_cube_in_grid)
@@ -36,7 +36,7 @@ class AppLogic:
     def clear_window(self):
         self.volume_renderer.clear_all_actors()
 
-    def open_file_dialog(self):
+    def open_ct_file(self):
         options = QFileDialog.Options()
         filename, _ = QFileDialog.getOpenFileName(self.find_main_window(), "Open CT File", "", "NRRD Files (*.nrrd)", options=options)
         print(filename)
@@ -94,7 +94,11 @@ class AppLogic:
     def extract_segment(self, output_segment_file, image, label_value):
         if not os.path.exists(output_segment_file):
             extracted_region = sitk.BinaryThreshold(image, lowerThreshold=label_value, upperThreshold=label_value)
-            sitk.WriteImage(extracted_region, output_segment_file)
+            # Write Compressed NRRD file form  70MB to 1.5MB
+            writer = sitk.ImageFileWriter()
+            writer.SetFileName(output_segment_file)
+            writer.UseCompressionOn()
+            writer.Execute(extracted_region)
             return extracted_region
         else:
             return self.read_nrrd_file(output_segment_file)
@@ -129,6 +133,7 @@ class DemoApp(QMainWindow):
         self.setup()
 
     def setup(self):
+        # TODO: Import the generated UI file using the pyuic5 command
         import demo_ui
         self.ui = demo_ui.Ui_MainWindow()
         self.ui.setupUi(self)

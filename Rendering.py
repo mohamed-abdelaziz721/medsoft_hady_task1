@@ -13,36 +13,26 @@ class VolumeRenderer(QFrame):
         self.filename = None
         self.stlfilename = None
         self.all_vtk_widgets = vtk_widgets
-        # self.renderer = vtk.vtkRenderer()
         self.renderer_list = []  # Store renderers for each widget
         self.actor_list = []  # Store cube actors in a list
         self.next_grid_index = 0  # Track the index of the next grid to place the cube
-        self.initialize_renderer()
+        self.initialize_renderers()
 
-    def initialize_renderer(self):
-        self.layout = QGridLayout()
-        self.setLayout(self.layout)
-        # Loop through all vtk_widgets and add a placeholder cube for each
+
+    def set_vtk_widgets(self, vtk_widgets):
+        # TODO: move to refactor_QGrid
+        # for loop QVTKRenderWindowInteractor
+        # initialize widgets from outside the renderer
+        pass
+
+    def initialize_renderers(self):
         for vtk_widget in self.all_vtk_widgets:
             renderer = vtk.vtkRenderer()
             renderer.SetBackground(0.2, 0.3, 0.4)  # Set up renderer background
             render_window = vtk_widget.GetRenderWindow()
             render_window.AddRenderer(renderer)
             self.renderer_list.append(renderer)  # Store the renderer
-            # render_window.Render()
-            # Create an instance of VolumeRenderer and add a placeholder cube
-            self.add_placeholder_cube(renderer)
         print(len(self.actor_list), len(self.all_vtk_widgets))    
-
-    def clear_all_actors(self):
-        for vtk_widget in self.all_vtk_widgets:
-            render_window = vtk_widget.GetRenderWindow()
-            renderer = render_window.GetRenderers().GetFirstRenderer()
-            if renderer:
-                renderer.RemoveAllViewProps()
-                render_window.Render()
-        self.actor_list = []  # Clear the list of actors
-        print(len(self.actor_list), len(self.all_vtk_widgets))   
 
     def clear_actor_in_grid_index(self, index):
         if index < len(self.renderer_list):
@@ -54,62 +44,27 @@ class VolumeRenderer(QFrame):
         else:
             print(f"Invalid grid index: {index}. No actors cleared.")
 
-        
-    def add_placeholder_cube(self, renderer):
-        # Data Source
-        cube = vtk.vtkCubeSource()
-        # Mapper | pass datasource to mapper
-        cube_mapper = vtk.vtkPolyDataMapper()
-        cube_mapper.SetInputConnection(cube.GetOutputPort())
-        # Actor | pass mapper to actor
-        actor = vtk.vtkActor()
-        actor.SetMapper(cube_mapper)
-        actor.GetProperty().SetColor(1, 0, 0)
-        actor.GetProperty().SetRepresentationToWireframe()
-        # Add the actor to the renderer
-        renderer.AddActor(actor)
-        # Store the actor in the list for later reference or manipulation
-        self.actor_list.append(actor)
-        render_window = renderer.GetRenderWindow()
-        render_window.Render()
-
-
     def add_cube(self):
+        """leave for testing purposes |> remove after Final testing the app functionality"""
         if self.next_grid_index < len(self.all_vtk_widgets):
-            # Clear the actor in the current grid index
             self.clear_actor_in_grid_index(self.next_grid_index)
             print("Remove actor...adding cube...")
-            # Add the cube to the current grid index
             renderer = self.renderer_list[self.next_grid_index]
-
             cube = vtk.vtkCubeSource()
             cube_mapper = vtk.vtkPolyDataMapper()
             cube_mapper.SetInputConnection(cube.GetOutputPort())
             actor = vtk.vtkActor()
             actor.SetMapper(cube_mapper)
-            # actor.GetProperty().SetRepresentationToWireframe()
-            # Generate random color values
             color = [random.random(), random.random(), random.random()]
-            actor.GetProperty().SetColor(color)
-            
+            actor.GetProperty().SetColor(color)        
             renderer.AddActor(actor)
-            # Update the actor list and render the window
             self.actor_list.append(actor)
             render_window = self.all_vtk_widgets[self.next_grid_index].GetRenderWindow()
             render_window.Render()
-            # Move to the next grid index
             renderer.ResetCamera()
-            renderer.ResetCameraClippingRange()
-            self.next_grid_index = (self.next_grid_index + 1) % len(self.all_vtk_widgets)
-        else:
-            print("No more available renderers. Starting from the first one.")
-            self.next_grid_index = 0
-            self.add_cube()
-
-
-        
-
-            
+        print("no more available renderers. Starting from the first one.")
+        self.next_grid_index = (self.next_grid_index + 1) % len(self.all_vtk_widgets)
+         
     def render_data(self, data_type="volume"):
         if data_type == "volume":
             self.render_volume()
@@ -124,22 +79,14 @@ class VolumeRenderer(QFrame):
 
     def render_volume(self):
         if self.next_grid_index < len(self.all_vtk_widgets):
-            # Clear the actor in the current grid index
             self.clear_actor_in_grid_index(self.next_grid_index)
-            # Add the cube to the current grid index
             renderer = self.renderer_list[self.next_grid_index]
-            print("Rendering volume...")
             if self.filename is None:
                 print("Error: No filename provided.")
                 return
-
             reader = vtk.vtkNrrdReader()
             reader.SetFileName(self.filename)
-
-            # Set volume property attributes
             self.colors = vtk.vtkNamedColors()
-            # self.colors.SetColor('BkgColor', [51, 77, 102, 255])
-
             colorTransferFunction = vtk.vtkColorTransferFunction()
             colorTransferFunction.AddRGBPoint(0, 0.0, 0.0, 0.0)
             colorTransferFunction.AddRGBPoint(500, 240.0 / 255.0, 184.0 / 255.0, 160.0 / 255.0)
@@ -166,29 +113,19 @@ class VolumeRenderer(QFrame):
             volume_property.SetAmbient(0.4)
             volume_property.SetDiffuse(0.6)
             volume_property.SetSpecular(0.2)
-            print("Finished setting volume property...")
             volume_mapper = vtk.vtkGPUVolumeRayCastMapper()
             volume_mapper.SetInputConnection(reader.GetOutputPort())
             volume = vtk.vtkVolume()
             volume.SetMapper(volume_mapper)
             volume.SetProperty(volume_property)
-            print("Adding volume to renderer...")
             renderer.AddVolume(volume)
-
             self.actor_list.append(volume)
-            # renderer.SetBackground(self.colors.GetColor3d('BkgColor'))
             renderer.ResetCamera()
-            print("Volume rendered end...")
             render_window = self.all_vtk_widgets[self.next_grid_index].GetRenderWindow()
             render_window.AddRenderer(renderer) 
             render_window.Render()
-            # Move to the next grid index
-            self.next_grid_index = (self.next_grid_index + 1) % len(self.all_vtk_widgets)
-        else:
-            print("No more available renderers. Starting from the first one.")
-            self.next_grid_index = 0
-            self.render_volume()
-
+        self.next_grid_index = (self.next_grid_index + 1) % len(self.all_vtk_widgets)
+        
 
 
     def visualize_stl_file(self):
@@ -200,14 +137,10 @@ class VolumeRenderer(QFrame):
             if self.stlfilename is None:
                 print("Error: No STL filename provided.")
                 return
-
             reader = vtk.vtkSTLReader()
             reader.SetFileName(self.stlfilename)
             reader.Update()
-
-            # Set up colors
             colors = vtk.vtkNamedColors()
-
             mapper = vtk.vtkPolyDataMapper()
             mapper.SetInputConnection(reader.GetOutputPort())
             mapper.SetScalarVisibility(0)
@@ -217,21 +150,10 @@ class VolumeRenderer(QFrame):
             actor.GetProperty().SetDiffuseColor(colors.GetColor3d('Ivory'))
             actor.GetProperty().SetSpecular(0.3)
             actor.GetProperty().SetSpecularPower(60.0)
-            # self.renderer.SetBackground(colors.GetColor3d('SlateGray'))
-            # self.renderer.AddActor(self.actor)
             renderer.ResetCamera()
-             # render the scene
-            # self.render_window.AddRenderer(self.renderer)
-            # self.render_window.Render()
-            
             renderer.AddActor(actor)
-            # Update the actor list and render the window
             self.actor_list.append(actor)
             render_window = self.all_vtk_widgets[self.next_grid_index].GetRenderWindow()
             render_window.Render()
-            # Move to the next grid index
-            self.next_grid_index = (self.next_grid_index + 1) % len(self.all_vtk_widgets)
-        else:
-            print("No more available renderers. Starting from the first one.")
-            self.next_grid_index = 0
-            self.visualize_stl_file()
+        self.next_grid_index = (self.next_grid_index + 1) % len(self.all_vtk_widgets)
+        
