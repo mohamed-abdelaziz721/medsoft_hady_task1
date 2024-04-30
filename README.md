@@ -1,20 +1,23 @@
 # medsoft_hady_task1
 
+## Updates 2 - VTK Render Multiple Windows in GridLayout
 
-## VTK Render Window in same QT APp
+
+
+## Updates 1 - VTK Render Window in same QT App
 New Files 
-> `refactor_v1_QH.py` **Run app from Here**
+> `Working_QH/refactor_QH.py` **Run app from Here**
 > 
->`Rendering.py`
+>`Working_QH/Rendering.py`
 
 - render all the scenes inside a H Box
 - Clear actors before Re-Render
 
-![App-GIF](refactor1-app.gif)
+![App-GIF](./images/refactor1-app.gif)
 
 
-
-![App](Screenshot_of_The_App.jpg)
+## First Attempt
+![App](./images/Screenshot_of_The_App.jpg)
 
 - Upload Data NNRD (Perform Volume Rendering)
 > File:  HNSCC-01-0080_CT.nrrd 
