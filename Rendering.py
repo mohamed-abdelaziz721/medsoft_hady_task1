@@ -1,11 +1,6 @@
-import os
 import vtk
-import SimpleITK as sitk
 import random
-from time import sleep  
-from PyQt5.QtWidgets import QHBoxLayout, QFrame, QGridLayout
-from vtkmodules.qt.QVTKRenderWindowInteractor import QVTKRenderWindowInteractor
-
+from PyQt5.QtWidgets import  QFrame
 
 class VolumeRenderer(QFrame):
     def __init__(self, vtk_widgets):
@@ -130,9 +125,7 @@ class VolumeRenderer(QFrame):
 
     def visualize_stl_file(self):
         if self.next_grid_index < len(self.all_vtk_widgets):
-            # Clear the actor in the current grid index
             self.clear_actor_in_grid_index(self.next_grid_index)
-            # Add the cube to the current grid index
             renderer = self.renderer_list[self.next_grid_index]
             if self.stlfilename is None:
                 print("Error: No STL filename provided.")
