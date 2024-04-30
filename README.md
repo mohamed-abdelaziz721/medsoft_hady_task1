@@ -2,7 +2,7 @@
 
 ## Updates 2 - VTK Render Multiple Windows in GridLayout
 
-
+![APP-Grid](./images/grid-layout-app.gif)
 
 ## Updates 1 - VTK Render Window in same QT App
 New Files 
