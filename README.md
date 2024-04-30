@@ -50,7 +50,10 @@ physical_size = sitk.GetArrayFromImage(binary_mask).sum() * image.GetSpacing()[0
 
 
 ## Issues will be resolved soon
-- load vtk window within the qt app
-- separate and restructure the logic into files for more readability
-- Rerender the window in the qt loop instead of instantioating a new one 
-- sitk conversion file output "big"   
+| Feature                              | Status      |
+|--------------------------------------|-------------|
+| Load VTK window within the Qt app    | ✅          |
+| Separate and restructure logic       | ✅          |
+| Rerender window in Qt loop           | ✅          |
+| Refactor                             | ⏳          |
+| Sitk conversion file output "big"    | ⏳          |
