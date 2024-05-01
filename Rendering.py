@@ -103,14 +103,13 @@ class VolumeRenderer(QFrame):
             if self.poly_data is None:
                 print("Error: No poly data provided.")
                 return
-            colors = vtk.vtkNamedColors()
             mapper = vtk.vtkPolyDataMapper()
             mapper.SetInputData(self.poly_data)
             actor = vtk.vtkActor()
             actor.SetMapper(mapper)
-            actor.GetProperty().SetColor(colors.GetColor3d('Ivory'))
             renderer.AddActor(actor)
             self.actor_list.append(actor)
+            renderer.ResetCamera()
             render_window = self.all_vtk_widgets[self.next_grid_index].GetRenderWindow()
             render_window.Render()
         self.next_grid_index = (self.next_grid_index + 1) % len(self.all_vtk_widgets)
