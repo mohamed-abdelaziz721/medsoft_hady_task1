@@ -1,5 +1,8 @@
 # medsoft_hady_task1
 
+## Update 3 - Separate Export Button
+![app-export-button](./images/final-export-button.png)
+
 ## Updates 2 - VTK Render Multiple Windows in GridLayout
 
 ![APP-Grid](./images/grid-layout-app.gif)
@@ -56,4 +59,5 @@ physical_size = sitk.GetArrayFromImage(binary_mask).sum() * image.GetSpacing()[0
 | Separate and restructure logic       | ✅          |
 | Rerender window in Qt loop           | ✅          |
 | Refactor                             | ⏳          |
-| Sitk conversion file output "big"    | ⏳          |
+| Sitk conversion file output "compressed"    | ✅          |
+| Stl save as binary reduce the size significantly    | ✅          |

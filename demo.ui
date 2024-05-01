@@ -36,13 +36,6 @@
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="cyl_cube">
-          <property name="text">
-           <string>Clear Actor | Add Cube</string>
-          </property>
-         </widget>
-        </item>
-        <item>
          <spacer name="verticalSpacer_3">
           <property name="orientation">
            <enum>Qt::Vertical</enum>
@@ -70,9 +63,6 @@
           <property name="editable">
            <bool>false</bool>
           </property>
-          <property name="currentText">
-           <string>Crainum</string>
-          </property>
           <item>
            <property name="text">
             <string>Crainum</string>
@@ -96,9 +86,16 @@
          </widget>
         </item>
         <item>
+         <widget class="QPushButton" name="view_segment">
+          <property name="text">
+           <string>View Segment </string>
+          </property>
+         </widget>
+        </item>
+        <item>
          <widget class="QPushButton" name="export_stl">
           <property name="text">
-           <string>View Segment STL</string>
+           <string>Export Segment STL</string>
           </property>
          </widget>
         </item>
@@ -121,7 +118,7 @@
         <item>
          <widget class="QLabel" name="label_2">
           <property name="text">
-           <string>Estimated Segment Volume:</string>
+           <string>Status</string>
           </property>
          </widget>
         </item>
