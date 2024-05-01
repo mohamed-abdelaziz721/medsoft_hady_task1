@@ -24,21 +24,14 @@ class VolumeRenderer(QFrame):
 
     def set_poly_data(self, poly_data):
         self.poly_data = poly_data    
-    
-    def set_vtk_widgets(self, vtk_widgets):
-        # TODO: move to refactor_QGrid
-        # for loop QVTKRenderWindowInteractor
-        # initialize widgets from outside the renderer
-        pass
 
     def initialize_renderers(self):
         for vtk_widget in self.all_vtk_widgets:
             renderer = vtk.vtkRenderer()
-            renderer.SetBackground(0.2, 0.3, 0.4)  # Set up renderer background
+            renderer.SetBackground(0.2, 0.3, 0.4)  
             render_window = vtk_widget.GetRenderWindow()
             render_window.AddRenderer(renderer)
-            self.renderer_list.append(renderer)  # Store the renderer
-        print(len(self.actor_list), len(self.all_vtk_widgets))    
+            self.renderer_list.append(renderer) 
 
     def clear_actor_in_grid_index(self, index):
         if index < len(self.renderer_list):

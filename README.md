@@ -1,7 +1,7 @@
 # medsoft_hady_task1
 
-## Update 3 - Separate Export Button
-![app-export-button](./images/final-export-button.png)
+## Update 3 - Separate Export Button | restructure files
+![app-export-button](./images/final-layout-app.gif)
 
 ## Updates 2 - VTK Render Multiple Windows in GridLayout
 
